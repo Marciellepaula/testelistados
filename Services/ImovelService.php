@@ -1,0 +1,89 @@
+<?php
+require_once 'Models/Imovel.php';
+require_once 'Utils/Validator.php';
+require_once 'Utils/ImageUploader.php';
+
+class ImovelService
+{
+    private $imovel;
+
+    public function __construct($imovel = null)
+    {
+
+        $this->imovel = $imovel ?: $this->getImovelInstance();
+    }
+
+    public function getImovelInstance()
+    {
+        return new Imovel();
+    }
+
+    public function cadastrar($data, $files)
+    {
+        try {
+
+            $titulo = Validator::sanitize($data['titulo']);
+            $descricao = Validator::sanitize($data['descricao']);
+            $preco = Validator::validatePrice($data['preco']);
+            $endereco = Validator::sanitize($data['endereco']);
+            $garagem = Validator::validateGaragem($data['garagem']);
+            $caminhoImagem = ImageUploader::upload($files['imagem']);
+
+            $created = $this->imovel->criar($titulo, $preco, $descricao, $endereco, $garagem, $caminhoImagem);
+
+            return [
+                'success' => $created,
+                'message' => $created ? 'Imóvel cadastrado com sucesso!' : 'Erro ao cadastrar imóvel.'
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function listar()
+    {
+
+        return  $this->imovel->obterTodos();
+    }
+
+    public function obterPorId($id)
+    {
+
+        return  $this->imovel->obterPorId($id);
+    }
+
+    public function editar($id, $data, $files)
+    {
+        try {
+
+
+            $titulo = Validator::sanitize($data['titulo']);
+            $preco = Validator::validatePrice($data['preco']);
+            $descricao = Validator::sanitize($data['descricao']);
+            $garagem = Validator::validateGaragem($data['garagem']);
+            $endereco = Validator::sanitize($data['endereco']);
+            $imagemAntiga = $data['imagem'] ?? null;
+            $caminhoImagem = ImageUploader::upload($files['imagem'], true, $imagemAntiga);
+
+            $updated =   $this->imovel->atualizar($id, $titulo, $preco, $descricao, $endereco, $garagem, $caminhoImagem);
+
+            return [
+                'success' => $updated,
+                'message' => $updated ? ' Imóvel atualizado com sucesso!' : 'Erro ao atualizar imóvel.'
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function excluir($id)
+    {
+
+        $deleted =  $this->imovel->deletar($id);
+
+        return [
+            'success' => $deleted,
+            'message' => $deleted ? ' Imóvel excluído com sucesso!' : ' Erro ao excluir imóvel.'
+        ];
+    }
+}
