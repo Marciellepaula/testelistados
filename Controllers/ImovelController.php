@@ -17,10 +17,10 @@ class ImovelController
 
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
-                header("Location: /index");
+                header("Location: /View/index");
             } else {
                 $_SESSION['error_message'] = $result['message'];
-                header("Location: /cadastrar");
+                header("Location: /View/cadastrar");
             }
             exit;
         }
@@ -38,15 +38,15 @@ class ImovelController
 
     public function editar($id)
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->imovelService->editar($id, $_POST, $_FILES);
-
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
-                header("Location: /index/");
+                header("Location: /View/index");
             } else {
                 $_SESSION['error_message'] = $result['message'];
-                header("Location: /index/editar?id={$id}");
+                header("Location: /View/editar?id={$id}");
             }
             exit;
         } else {
@@ -58,7 +58,7 @@ class ImovelController
     {
         $result = $this->imovelService->excluir($id);
         $_SESSION[$result['success'] ? 'success_message' : 'error_message'] = $result['message'];
-        header("Location: /imoveis/listar");
+        header("Location: View/index");
         exit;
     }
 }
