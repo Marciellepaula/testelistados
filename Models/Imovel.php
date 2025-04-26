@@ -90,7 +90,7 @@ class Imovel
     }
 
 
-    public function atualizar($id, $titulo, $preco, $descricao, $endereco, $garagem)
+    public function atualizar($id, $titulo, $preco, $descricao, $endereco, $garagem, $imagem)
     {
         try {
 
@@ -98,7 +98,7 @@ class Imovel
 
 
             $sql = "UPDATE imoveis SET titulo = :titulo, preco = :preco,  descricao = :descricao , garagem= :garagem, 
-                    endereco = :endereco WHERE id = :id";
+                    endereco = :endereco, imagem = :imagem  WHERE id = :id";
             $stmt = $pdo->prepare($sql);
 
 
@@ -108,6 +108,7 @@ class Imovel
             $stmt->bindParam(':preco', $preco);
             $stmt->bindParam(':endereco', $endereco);
             $stmt->bindParam(':garagem', $garagem);
+            $stmt->bindParam(':imagem', $imagem);
 
 
             if ($stmt->execute()) {
