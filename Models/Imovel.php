@@ -125,32 +125,32 @@ class Imovel
         }
     }
 
-    // Método para deletar um imóvel
+
     public function deletar($id)
     {
         try {
-            // Conectar ao banco de dados
+
             $pdo = Database::connect();
 
-            // Preparar a consulta SQL
+
             $sql = "DELETE FROM imoveis WHERE id = :id";
             $stmt = $pdo->prepare($sql);
 
-            // Vincular o parâmetro
+
             $stmt->bindParam(':id', $id);
 
-            // Executar a consulta e verificar se foi bem-sucedida
+
             if ($stmt->execute()) {
-                return true; // Sucesso
+                return true;
             } else {
-                return false; // Falha na execução
+                return false;
             }
         } catch (PDOException $e) {
-            // Tratar erros
+
             echo "Erro: " . $e->getMessage();
             return false;
         } finally {
-            // Garantir que a conexão seja fechada após a operação
+
             $pdo = null;
         }
     }
