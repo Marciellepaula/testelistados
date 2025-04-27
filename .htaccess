@@ -1,8 +1,11 @@
+# The public (root) directory .htaccess file
+
+Options -MultiViews
+
+DirectoryIndex View/index.php
+
 RewriteEngine On
 
-RewriteCond %{REQUEST_URI} !^/uploads/
-
-
-RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-f   
+RewriteRule ^(.+)$ View/index.php?url=$1 [QSA,L]
