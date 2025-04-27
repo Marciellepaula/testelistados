@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once 'Utils/ImageUploader.php';
+require_once __DIR__ . '/../Utils/ImageUploader.php';
 
 class ImageUploaderTest extends TestCase
 {
@@ -10,14 +10,12 @@ class ImageUploaderTest extends TestCase
 
     protected function setUp(): void
     {
-
         $this->testFilePath = tempnam(sys_get_temp_dir(), 'test_img');
         file_put_contents($this->testFilePath, 'fake image content');
     }
 
     protected function tearDown(): void
     {
-
         if (file_exists($this->testFilePath)) {
             unlink($this->testFilePath);
         }
@@ -33,11 +31,9 @@ class ImageUploaderTest extends TestCase
 
         $result = ImageUploader::upload($imageFile);
 
-        $this->assertStringStartsWith('uploads/', $result);
-        $this->assertFileExists($result);
+        $this->assertFileExists(__DIR__ . '/../' . $result);
 
-
-        unlink($result);
+        unlink(__DIR__ . '/../' . $result);
     }
 
     public function testUploadComErroLancaExcecao()
@@ -60,7 +56,7 @@ class ImageUploaderTest extends TestCase
             'error' => UPLOAD_ERR_NO_FILE
         ];
 
-        $existing = 'uploads/existente.jpg';
+        $existing = '/public/uploads/existente.jpg';
 
         $result = ImageUploader::upload($imageFile, true, $existing);
 
