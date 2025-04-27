@@ -1,9 +1,11 @@
 <?php
-require_once 'Services/ImovelService.php';
+require_once __DIR__ . '/../Services/ImovelService.php';
+
+
 
 class ImovelController
 {
-    private $imovelService;
+    public $imovelService;
 
     public function __construct()
     {
@@ -17,10 +19,10 @@ class ImovelController
 
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
-                header("Location: /View/index");
+                header("Location: /index");
             } else {
                 $_SESSION['error_message'] = $result['message'];
-                header("Location: /View/cadastrar");
+                header("Location: /cadastrar");
             }
             exit;
         }
@@ -43,10 +45,10 @@ class ImovelController
             $result = $this->imovelService->editar($id, $_POST, $_FILES);
             if ($result['success']) {
                 $_SESSION['success_message'] = $result['message'];
-                header("Location: /View/index");
+                header("Location: /index");
             } else {
                 $_SESSION['error_message'] = $result['message'];
-                header("Location: /View/editar?id={$id}");
+                header("Location: /editar?id={$id}");
             }
             exit;
         } else {
@@ -58,7 +60,7 @@ class ImovelController
     {
         $result = $this->imovelService->excluir($id);
         $_SESSION[$result['success'] ? 'success_message' : 'error_message'] = $result['message'];
-        header("Location: View/index");
+        header("Location: /index");
         exit;
     }
 }
