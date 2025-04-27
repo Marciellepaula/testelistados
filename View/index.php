@@ -1,0 +1,93 @@
+<?php
+
+
+$baseUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+require_once __DIR__ . '/../Controllers/ImovelController.php';
+
+$controller = new ImovelController();
+
+$acao = $_GET['acao'] ?? 'listar';
+
+
+switch ($acao) {
+    case 'cadastrar':
+        $controller->cadastrar();
+        exit;
+    case 'listar':
+        $imoveis = $controller->listar();
+        break;
+    case 'editar':
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $controller->editar($id);
+        }
+        exit;
+    case 'excluir':
+        $id = $_GET['id'] ?? null;
+        $controller->excluir($id);
+        exit;
+    default:
+        echo "Ação inválida!";
+        exit;
+}
+
+include('header.php');
+?>
+
+
+<body>
+    <div class="container mt-4">
+        <h5>Meus imóveis</h5>
+
+        <?php if (!empty($imoveis)): ?>
+            <?php foreach ($imoveis as $imovel): ?>
+                <div class="row align-items-center border-bottom py-3">
+                    <div class="col-md-2 text-center position-relative">
+                        <?php if (!empty($imovel['imagem'])): ?>
+                            <img src="<?= $baseUrl ?>/<?= $imovel['imagem'] ?>" class="img-fluid rounded" style="width: 100%; height: 120px; object-fit: cover;">
+                        <?php else: ?>
+                            <div class="bg-light d-flex justify-content-center align-items-center rounded" style="width: 100%; height: 120px;">
+                                <i class="bi bi-image" style="font-size: 2rem; color: #ccc;"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="col-md-7">
+                        <h6 class="fw-bold"><?= htmlspecialchars($imovel['titulo']) ?></h6>
+
+                        <?php if (!empty($imovel['preco'])): ?>
+                            <p class="text-success fw-bold mb-1">R$ <?= number_format($imovel['preco'], 2, ',', '.') ?></p>
+                        <?php endif; ?>
+
+                        <?php if (!empty($imovel['descricao'])): ?>
+                            <p class="mb-1"><?= htmlspecialchars($imovel['descricao']) ?></p>
+                        <?php endif; ?>
+
+                        <?php if (!empty($imovel['endereco'])): ?>
+                            <small class="text-muted"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($imovel['endereco']) ?></small><br>
+                        <?php endif; ?>
+
+                        <?php if (!empty($imovel['garagem'])): ?>
+                            <small class="text-muted"><i class="bi bi-car-front"></i> Garagem: <?= htmlspecialchars($imovel['garagem']) ?></small>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="col-md-3 text-end">
+                        <a href="View/editar.php?id=<?= $imovel['id'] ?>" class="btn btn-outline-primary btn-sm me-2">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="index.php?acao=excluir&id=<?= $imovel['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este imóvel?')">Excluir
+                        </a>
+
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="alert alert-warning text-center mt-5">
+                Nenhum imóvel encontrado.
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <?php include('footer.php'); ?>
+</body>
