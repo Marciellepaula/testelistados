@@ -28,10 +28,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto gap-2">
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold text-white" href="index.php">Home</a>
+                        <a class="nav-link fw-semibold text-white" href="View/index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold text-white" href="cadastro.php">Novo Imóvel</a>
+                        <a class="nav-link fw-semibold text-white" href="View/cadastro.php">Novo Imóvel</a>
                     </li>
                 </ul>
             </div>
