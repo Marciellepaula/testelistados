@@ -7,22 +7,22 @@ class ImageUploader
         if (isset($imageFile) && $imageFile['error'] === UPLOAD_ERR_OK) {
             $tmpName = $imageFile['tmp_name'];
             $originalName = basename($imageFile['name']);
-            $path = 'uploads/' . uniqid() . '-' . $originalName;
+            $fileName = uniqid() . '-' . $originalName;
+            $relativePath = '/public/uploads/' . $fileName;
+            $absolutePath = __DIR__ . '/../' . $relativePath;
 
-            if (!is_dir('uploads')) {
-                mkdir('uploads', 0777, true);
+            if (!is_dir(__DIR__ . '/../public/uploads')) {
+                mkdir(__DIR__ . '/../public/uploads', 0777, true);
             }
 
-
             $moved = php_sapi_name() === 'cli'
-                ? rename($tmpName, $path)
-                : move_uploaded_file($tmpName, $path);
+                ? rename($tmpName, $absolutePath)
+                : move_uploaded_file($tmpName, $absolutePath);
 
             if ($moved) {
-
-                return $path;
+                return $relativePath;
             } else {
-                throw new Exception(" Erro ao mover o arquivo de imagem.");
+                throw new Exception("Erro ao mover o arquivo de imagem.");
             }
         }
 
@@ -30,6 +30,6 @@ class ImageUploader
             return $existingImage;
         }
 
-        throw new Exception(" Erro no envio da imagem.");
+        throw new Exception("Erro no envio da imagem.");
     }
 }
