@@ -1,4 +1,4 @@
-<footer class="w-100 mt-4 d-flex align-items-center justify-content-between flex-wrap bg-primary p-4 text-white">
+<footer class="mt-auto bg-primary p-4 text-white w-100">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
         <p class="mb-0 fs-6">&copy; <?= date('Y') ?> Imobiliária - Todos os direitos reservados.</p>
 
@@ -16,6 +16,7 @@
     </div>
 </footer>
 
+</div>
 </body>
 
 </html>
