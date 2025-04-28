@@ -3,10 +3,8 @@ require_once('header.php');
 $baseUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
 ?>
 
-
-
 <div class="container mt-4">
-    <h5>Meus imóveis</h5>
+    <h5><i class="bi bi-house-door-fill"></i> Meus imóveis</h5>
 
     <?php if (!empty($imoveis)): ?>
         <?php foreach ($imoveis as $imovel): ?>
@@ -25,7 +23,9 @@ $baseUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
                     <h6 class="fw-bold"><?= htmlspecialchars($imovel['titulo']) ?></h6>
 
                     <?php if (!empty($imovel['preco'])): ?>
-                        <p class="text-success fw-bold mb-1">R$ <?= number_format($imovel['preco'], 2, ',', '.') ?></p>
+                        <p class="text-success fw-bold mb-1">
+                            <i class="bi bi-currency-dollar"></i> R$ <?= number_format($imovel['preco'], 2, ',', '.') ?>
+                        </p>
                     <?php endif; ?>
 
                     <?php if (!empty($imovel['descricao'])): ?>
@@ -33,27 +33,32 @@ $baseUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
                     <?php endif; ?>
 
                     <?php if (!empty($imovel['endereco'])): ?>
-                        <small class="text-muted"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($imovel['endereco']) ?></small><br>
+                        <small class="text-muted">
+                            <i class="bi bi-geo-alt-fill"></i> <?= htmlspecialchars($imovel['endereco']) ?>
+                        </small><br>
                     <?php endif; ?>
 
                     <?php if (!empty($imovel['garagem'])): ?>
-                        <small class="text-muted"><i class="bi bi-car-front"></i> Garagem: <?= htmlspecialchars($imovel['garagem']) ?></small>
+                        <small class="text-muted">
+                            <i class="bi bi-car-front-fill"></i> Garagem: <?= htmlspecialchars($imovel['garagem']) ?>
+                        </small>
                     <?php endif; ?>
                 </div>
 
                 <div class="col-md-3 text-end">
                     <a href="/imoveis/<?= $imovel['id'] ?>/editar" class="btn btn-outline-primary btn-sm me-2">
-                        <i class="bi bi-pencil"></i> Editar
+                        <i class="bi bi-pencil-fill"></i> Editar
                     </a>
 
-                    <a href="/imoveis/<?= $imovel['id'] ?>/excluir" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este imóvel?')">Excluir
+                    <a href="/imoveis/<?= $imovel['id'] ?>/excluir" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este imóvel?')">
+                        <i class="bi bi-trash-fill"></i> Excluir
                     </a>
                 </div>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <div class="alert alert-warning text-center mt-5">
-            Nenhum imóvel encontrado.
+            <i class="bi bi-exclamation-triangle-fill"></i> Nenhum imóvel encontrado.
         </div>
     <?php endif; ?>
 </div>
