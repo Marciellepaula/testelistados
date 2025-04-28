@@ -2,10 +2,10 @@
 
 Options -MultiViews
 
-DirectoryIndex View/index.php
+DirectoryIndex public/index.php
 
 RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f   
-RewriteRule ^(.+)$ View/index.php?url=$1 [QSA,L]
+RewriteRule ^(.+)$ public/index.php [QSA,L]
