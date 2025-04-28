@@ -1,28 +1,14 @@
 <?php
 include('header.php');
-
-
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-if (!$id) {
-    echo '<div class="container mt-5"><div class="alert alert-danger">ID inválido!</div></div>';
-    include('footer.php');
-    exit;
-}
-
-require_once __DIR__ . '/../Controllers/ImovelController.php';
-
 $baseUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-
-$imovelController = new ImovelController();
-$imovel = $imovelController->obterPorId($id);
 ?>
 
 <div class="container mt-5">
     <h5 class="mb-4 text-secondary">Editar Imóvel</h5>
 
-
     <?php if ($imovel): ?>
-        <form method="POST" action="View/index.php?acao=editar&id=<?= $imovel['id'] ?>" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+        <form method="POST" action=/imoveis/<?= $imovel['id'] ?> enctype="multipart/form-data" class="needs-validation" novalidate>
 
             <div class="mb-3">
                 <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
