@@ -5,9 +5,9 @@ O projeto contém um `Dockerfile` que define o ambiente PHP com Apache, além de
 
 ## 📷 Capturas de Tela
 
-![Pagina inicial](img/Screenshot_93.png)
+![Pagina inicial](https://raw.githubusercontent.com/Marciellepaula/testelistados/refs/heads/main/Img/Screenshot_93.png)
 
-![Pagina de editar](img/Screenshot_94.png)
+![Pagina de editar](https://raw.githubusercontent.com/Marciellepaula/testelistados/refs/heads/main/Img/Screenshot_94.png)
 
 ---
 
