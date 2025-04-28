@@ -16,4 +16,4 @@ O projeto contém um `Dockerfile` que define o ambiente PHP com Apache, além de
 ```bash
 git clone https://github.com/Marciellepaula/testelistados.git
 cd testelistados
-docker-compose up --build
+docker-compose up 
