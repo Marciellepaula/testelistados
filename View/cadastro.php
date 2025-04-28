@@ -6,7 +6,7 @@ include('header.php');
 
     <div class="container mt-5">
         <h5 class="mb-4 text-secondary">Cadastro de Imóvel</h5>
-        <form method="POST" action="index.php?acao=cadastrar" enctype="multipart/form-data">
+        <form method="POST" action="/imovel" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="titulo" class="form-label">Título</label>
                 <input type="text" id="titulo" name="titulo" class="form-control" required>
