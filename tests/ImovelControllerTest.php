@@ -2,82 +2,131 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../Services/ImovelService.php';
 require_once __DIR__ . '/../Controllers/ImovelController.php';
+require_once __DIR__ . '/../Models/Imovel.php';
+require_once __DIR__ . '/../Utils/Validator.php';
+require_once __DIR__ . '/../Utils/ImageUploader.php';
 
 class ImovelControllerTest extends TestCase
 {
-    public function testCadastrarFail()
+    private $testFilePath;
+    public $imovelController;
+    public $mockImovel;
+
+    protected function setUp(): void
     {
-        $mockService = $this->createMock(ImovelService::class);
-        $mockService->method('cadastrar')->willReturn(['success' => false, 'message' => 'Falha ao cadastrar imóvel.']);
-        $controller = new ImovelController($mockService);
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $_SESSION = [];
+        $_POST = [];
+        $_FILES = [];
+        $_SERVER = [];
+
+        $this->mockImovel = $this->createMock(Imovel::class);
+        $this->imovelController = new ImovelController($this->mockImovel);
+
+        $this->testFilePath = __DIR__ . '/test_image.jpg';
+        file_put_contents($this->testFilePath, 'dummy image content');
+    }
+
+    public function testCadastrarSuccess()
+    {
+        $_FILES['imagem'] = [
+            'name' => 'imagem.jpg',
+            'tmp_name' => $this->testFilePath,
+            'error' => UPLOAD_ERR_OK
+        ];
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET['acao'] = 'cadastrar';
-
         $_POST = [
             'titulo' => 'Casa Nova',
             'preco' => 350000.0,
             'descricao' => 'Linda casa com 3 quartos',
             'endereco' => 'Rua das Flores, 123',
-            'garagem' => 2
-        ];
-        $_FILES['imagem'] = [
-            'name' => 'test_image.jpg',
-            'tmp_name' => '/path/to/test_image.jpg',
-            'error' => 0,
-            'size' => 12345
+            'garagem' => 2,
         ];
 
-        $imagem = 'path/to/test_image.jpg';
+        $this->mockImovel->expects($this->once())
+            ->method('criar')
+            ->with(
+                $this->equalTo('Casa Nova'),
+                $this->equalTo(350000.0),
+                $this->equalTo('Linda casa com 3 quartos'),
+                $this->equalTo('Rua das Flores, 123'),
+                $this->equalTo(2),
+                $this->stringContains('public/uploads/')
+            )
+            ->willReturn(1);
 
-        ob_start();
-        $controller->cadastrar($_POST, $_FILES);
-        $output = ob_get_clean();
+        $this->imovelController->cadastrar();
 
-        $this->assertEquals('Falha ao cadastrar imóvel.', $_SESSION['error_message']);
-        $this->assertEquals('Location: /cadastrar', $this->getHeaders()[0]);
+        $this->assertEquals('Imóvel cadastrado com sucesso!', $_SESSION['success_message']);
     }
 
-    public function testEditarPost()
+    public function testCadastrarFailure()
     {
-        $mockService = $this->createMock(ImovelService::class);
-        $mockService->method('editar')->willReturn(['success' => true, 'message' => 'Imóvel atualizado com sucesso.']);
-        $controller = new ImovelController($mockService);
+        $_FILES['imagem'] = [
+            'name' => 'image.jpg',
+            'tmp_name' => $this->testFilePath,
+            'error' => UPLOAD_ERR_OK
+        ];
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_GET['acao'] = 'editar';
-        $_GET['id'] = 1;
-        $_POST = ['name' => 'Imóvel Editado', 'price' => 150000];
+        $_POST = [
+            'titulo' => 'Apartamento',
+            'preco' => 250000,
+            'descricao' => 'A nice apartment.',
+            'endereco' => 'Rua A, 123',
+            'garagem' => 2,
+        ];
 
-        ob_start();
-        $controller->editar(1);
-        $output = ob_get_clean();
+        $this->mockImovel->expects($this->once())
+            ->method('criar')
+            ->willReturn(false);
 
-        $this->assertEquals('Imóvel atualizado com sucesso.', $_SESSION['success_message']);
-        $this->assertEquals('Location: /index', $this->getHeaders()[0]);
+        $this->imovelController->cadastrar();
+
+        $this->assertSessionMessage('Erro ao cadastrar imóvel.', false);
     }
 
-    public function testExcluir()
+    public function testExcluirSuccess()
     {
-        $mockService = $this->createMock(ImovelService::class);
-        $mockService->method('excluir')->willReturn(['success' => true, 'message' => 'Imóvel excluído com sucesso.']);
-        $controller = new ImovelController($mockService);
+        $this->mockImovel->expects($this->once())
+            ->method('deletar')
+            ->with(1)
+            ->willReturn(true);
 
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['acao'] = 'excluir';
-        $_GET['id'] = 1;
+        $this->imovelController->excluir(1);
 
-        ob_start();
-        $controller->excluir(1);
-        $output = ob_get_clean();
-
-        $this->assertEquals('Imóvel excluído com sucesso.', $_SESSION['success_message']);
-        $this->assertEquals('Location: /index', $this->getHeaders()[0]);
+        $this->assertSessionMessage('Imóvel excluído com sucesso!', true);
     }
-    private function getHeaders()
+
+    public function testExcluirFailure()
     {
-        return headers_list();
+        $this->mockImovel->expects($this->once())
+            ->method('deletar')
+            ->with(1)
+            ->willReturn(false);
+
+        $this->imovelController->excluir(1);
+
+        $this->assertSessionMessage('Erro ao excluir imóvel.', false);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (file_exists($this->testFilePath)) {
+            unlink($this->testFilePath);
+        }
+    }
+
+    private function assertSessionMessage($expectedMessage, $success)
+    {
+        $messageKey = $success ? 'success_message' : 'error_message';
+        $this->assertEquals($expectedMessage, $_SESSION[$messageKey]);
     }
 }
